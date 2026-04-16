@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proposta — Instituto Lorenzi Dantas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold: #c9a96e;
+      --gold-light: #e8d5b0;
+      --dark: #0a0806;
+      --dark-2: #111109;
+      --white: #f5f0e8;
+      --gray: #999990;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: var(--white);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+    }
+
+    /* CAPA */
+    .capa {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 60px;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(201,169,110,0.15);
+    }
+    .capa-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 80% 20%, rgba(201,169,110,0.07) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 80%, rgba(201,169,110,0.04) 0%, transparent 50%);
+    }
+    .capa-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+      z-index: 2;
+    }
+    .capa-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+    .capa-logo small {
+      display: block;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.52rem;
+      letter-spacing: 0.4em;
+      color: rgba(201,169,110,0.4);
+      margin-top: 4px;
+    }
+    .capa-data {
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: var(--gray);
+      text-align: right;
+      text-transform: uppercase;
+    }
+    .capa-meio {
+      position: relative;
+      z-index: 2;
+    }
+    .capa-eyebrow {
+      font-size: 0.6rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .capa-eyebrow::before {
+      content: '';
+      width: 40px; height: 1px;
+      background: var(--gold);
+    }
+    .capa-titulo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 6vw, 6rem);
+      font-weight: 300;
+      line-height: 1.05;
+      max-width: 700px;
+    }
+    .capa-titulo em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .capa-numero {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20rem;
+      font-weight: 300;
+      color: rgba(201,169,110,0.04);
+      line-height: 1;
+      user-select: none;
+    }
+    .capa-bottom {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .capa-para {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+    .capa-para strong {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--white);
+      letter-spacing: 0.05em;
+      text-transform: none;
+      margin-top: 6px;
+    }
+    .capa-validade {
+      text-align: right;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--gray);
+    }
+    .capa-validade strong {
+      display: block;
+      color: var(--gold);
+      font-size: 0.75rem;
+      margin-top: 4px;
+    }
+
+    /* SEÇÕES */
+    section {
+      padding: 100px 60px;
+      border-bottom: 1px solid rgba(201,169,110,0.08);
+    }
+    .section-label {
+      font-size: 0.55rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 60px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .section-label::after {
+      content: '';
+      width: 40px; height: 1px;
+      background: var(--gold);
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 32px;
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+
+    /* ABERTURA */
+    .abertura-texto {
+      max-width: 700px;
+    }
+    .abertura-lead {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 3vw, 2.5rem);
+      font-weight: 300;
+      line-height: 1.3;
+      margin-bottom: 40px;
+    }
+    .abertura-lead em { font-style: italic; color: var(--gold); }
+    .abertura-p {
+      font-size: 0.9rem;
+      line-height: 1.9;
+      color: rgba(245,240,232,0.7);
+      max-width: 600px;
+    }
+
+    /* DIAGNÓSTICO */
+    .diagnostico-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-bottom: 60px;
+    }
+    .diag-card {
+      background: #111109;
+      padding: 40px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .diag-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s ease;
+    }
+    .diag-card:hover::before { transform: scaleX(1); }
+    .diag-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .diag-num.red { color: #e05555; }
+    .diag-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 12px;
+    }
+    .diag-desc {
+      font-size: 0.78rem;
+      line-height: 1.7;
+      color: rgba(245,240,232,0.5);
+    }
+
+    .alerta {
+      background: rgba(224,85,85,0.08);
+      border: 1px solid rgba(224,85,85,0.2);
+      padding: 32px 40px;
+      margin-top: 40px;
+    }
+    .alerta-titulo {
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #e05555;
+      margin-bottom: 12px;
+    }
+    .alerta-texto {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--white);
+      line-height: 1.4;
+    }
+
+    /* PERDA */
+    .perda-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .perda-numeros {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .perda-item {
+      background: #111109;
+      padding: 32px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .perda-item-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+    .perda-item-valor {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: #e05555;
+    }
+    .perda-texto p {
+      font-size: 0.88rem;
+      line-height: 1.9;
+      color: rgba(245,240,232,0.65);
+      margin-bottom: 20px;
+    }
+    .perda-destaque {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--white);
+      border-left: 2px solid var(--gold);
+      padding-left: 24px;
+      margin-top: 32px;
+    }
+
+    /* SOLUÇÃO */
+    .solucao-items {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      margin-top: 60px;
+    }
+    .solucao-item {
+      background: #111109;
+      padding: 48px 40px;
+      position: relative;
+    }
+    .solucao-item::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 40px; right: 40px;
+      height: 1px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .solucao-item:hover::after { opacity: 1; }
+    .solucao-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 300;
+      color: rgba(201,169,110,0.1);
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+    .solucao-nome {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+    .solucao-geo {
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .solucao-desc {
+      font-size: 0.8rem;
+      line-height: 1.8;
+      color: rgba(245,240,232,0.55);
+    }
+
+    /* PACOTES */
+    .pacotes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 60px;
+    }
+    .pacote {
+      background: #111109;
+      padding: 48px 36px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .pacote.destaque {
+      background: #161410;
+      outline: 1px solid rgba(201,169,110,0.3);
+    }
+    .pacote-badge {
+      position: absolute;
+      top: -1px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold);
+      color: var(--dark);
+      font-size: 0.5rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      white-space: nowrap;
+    }
+    .pacote-nome {
+      font-size: 0.55rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .pacote-titulo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+    .pacote-sub {
+      font-size: 0.72rem;
+      color: var(--gray);
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+    .pacote-preco-ancora {
+      font-size: 0.65rem;
+      color: var(--gray);
+      text-decoration: line-through;
+      margin-bottom: 4px;
+    }
+    .pacote-preco {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      font-weight: 300;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .pacote-preco span {
+      font-size: 0.75rem;
+      font-family: 'Jost', sans-serif;
+      color: var(--gray);
+    }
+    .pacote-setup {
+      font-size: 0.65rem;
+      color: var(--gold);
+      margin-bottom: 32px;
+    }
+    .pacote-divider {
+      width: 40px; height: 1px;
+      background: rgba(201,169,110,0.2);
+      margin-bottom: 28px;
+    }
+    .pacote-items {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+    .pacote-items li {
+      font-size: 0.75rem;
+      color: rgba(245,240,232,0.65);
+      display: flex;
+      gap: 12px;
+      line-height: 1.5;
+    }
+    .pacote-items li::before {
+      content: '—';
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+    .pacote-items li.destaque-item {
+      color: var(--white);
+    }
+    .pacote-cta {
+      margin-top: 36px;
+      padding: 14px;
+      text-align: center;
+      font-size: 0.58rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: block;
+      transition: all 0.3s;
+    }
+    .pacote-cta.outline {
+      border: 1px solid rgba(201,169,110,0.3);
+      color: var(--gold);
+    }
+    .pacote-cta.outline:hover {
+      background: rgba(201,169,110,0.1);
+    }
+    .pacote-cta.solid {
+      background: var(--gold);
+      color: var(--dark);
+    }
+    .pacote-cta.solid:hover { background: var(--gold-light); }
+
+    /* GARANTIA */
+    .garantia-box {
+      background: #111109;
+      padding: 64px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 60px;
+      align-items: center;
+      margin-top: 60px;
+    }
+    .garantia-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 8rem;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+      opacity: 0.6;
+    }
+    .garantia-titulo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      font-weight: 300;
+      margin-bottom: 20px;
+    }
+    .garantia-titulo em { font-style: italic; color: var(--gold); }
+    .garantia-texto {
+      font-size: 0.85rem;
+      line-height: 1.9;
+      color: rgba(245,240,232,0.65);
+      max-width: 560px;
+    }
+
+    /* FECHAMENTO */
+    .fechamento {
+      text-align: center;
+      padding: 120px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .fechamento-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(201,169,110,0.06) 0%, transparent 70%);
+    }
+    .fechamento-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.4;
+      max-width: 800px;
+      margin: 0 auto 60px;
+      position: relative;
+      z-index: 2;
+    }
+    .fechamento-quote em { color: var(--gold); font-style: normal; }
+    .fechamento-cta {
+      position: relative;
+      z-index: 2;
+      display: inline-block;
+      background: var(--gold);
+      color: var(--dark);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      padding: 20px 56px;
+      text-decoration: none;
+      transition: background 0.3s;
+      margin-bottom: 32px;
+    }
+    .fechamento-cta:hover { background: var(--gold-light); }
+    .fechamento-validade {
+      position: relative;
+      z-index: 2;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--gray);
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 40px 60px;
+      border-top: 1px solid rgba(201,169,110,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.65rem;
+      color: var(--gray);
+      letter-spacing: 0.1em;
+    }
+
+    /* PRINT */
+    @media print {
+      body { background: white; color: #111; }
+      .capa, section, .fechamento { padding: 60px 40px; }
+    }
+
+    @media (max-width: 900px) {
+      .capa, section, .fechamento, footer { padding: 60px 24px; }
+      .diagnostico-grid { grid-template-columns: 1fr 1fr; }
+      .perda-layout { grid-template-columns: 1fr; gap: 40px; }
+      .solucao-items { grid-template-columns: 1fr; }
+      .pacotes-grid { grid-template-columns: 1fr; }
+      .garantia-box { grid-template-columns: 1fr; gap: 24px; }
+      .garantia-num { font-size: 5rem; }
+      .capa-numero { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CAPA -->
+  <div class="capa">
+    <div class="capa-bg"></div>
+    <div class="capa-top">
+      <div class="capa-logo">
+        GEO Masters
+        <small>Presença Digital & IA Optimization</small>
+      </div>
+      <div class="capa-data">
+        Proposta Comercial<br>
+        Abril · 2026
+      </div>
+    </div>
+    <div class="capa-meio">
+      <p class="capa-eyebrow">Diagnóstico + Solução</p>
+      <h1 class="capa-titulo">
+        Você é excelente.<br>
+        As IAs ainda<br>
+        <em>não sabem disso.</em>
+      </h1>
+      <div class="capa-numero">AI</div>
+    </div>
+    <div class="capa-bottom">
+      <div class="capa-para">
+        Preparado para
+        <strong>Dra. Lillian Lorenzi & Dr. Heitor Dantas</strong>
+      </div>
+      <div class="capa-validade">
+        Validade da proposta
+        <strong>10 dias corridos</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABERTURA -->
+  <section>
+    <p class="section-label">O Problema</p>
+    <div class="abertura-texto">
+      <p class="abertura-lead">
+        Dra. Lillian, você não está invisível<br>
+        para seus pacientes atuais.<br>
+        <em>Mas é invisível para os próximos.</em>
+      </p>
+      <p class="abertura-p">
+        Quando alguém em Palmas busca uma clínica de harmonização, odontologia ou fisioterapia — no Google, no ChatGPT, no Gemini — o Instituto Lorenzi Dantas não aparece. Não porque a clínica não seja excelente. Mas porque, digitalmente, ela ainda não existe para as inteligências artificiais.
+      </p>
+    </div>
+  </section>
+
+  <!-- DIAGNÓSTICO -->
+  <section>
+    <p class="section-label">Diagnóstico em Números</p>
+    <div class="diagnostico-grid">
+      <div class="diag-card">
+        <div class="diag-num red">38</div>
+        <p class="diag-label">GEO Score / 100</p>
+        <p class="diag-desc">Visibilidade atual para inteligências artificiais. Abaixo de 50 significa ausência nas recomendações.</p>
+      </div>
+      <div class="diag-card">
+        <div class="diag-num red">6/6</div>
+        <p class="diag-label">IAs Bloqueadas</p>
+        <p class="diag-desc">ChatGPT, Gemini, Claude, Perplexity e outros — todos impedidos de ler e recomendar sua clínica.</p>
+      </div>
+      <div class="diag-card">
+        <div class="diag-num red">0</div>
+        <p class="diag-label">Site Oficial</p>
+        <p class="diag-desc">Ausência completa de presença canônica. A IA categoriza o instituto como "perfil de rede social", não como clínica de saúde.</p>
+      </div>
+      <div class="diag-card">
+        <div class="diag-num red">15</div>
+        <p class="diag-label">Conteúdo / 100</p>
+        <p class="diag-desc">Conteúdo primariamente visual e promocional. Nenhuma informação factual ou técnica que as IAs possam citar.</p>
+      </div>
+      <div class="diag-card">
+        <div class="diag-num red">0</div>
+        <p class="diag-label">Schema.org</p>
+        <p class="diag-desc">Sem estrutura de dados. A IA não consegue identificar quem são os profissionais, seus registros ou suas especialidades.</p>
+      </div>
+      <div class="diag-card">
+        <div class="diag-num" style="color:rgba(201,169,110,0.4)">?</div>
+        <p class="diag-label">Percepção da IA</p>
+        <p class="diag-desc">"Não há informações suficientes de fontes confiáveis para fazer uma avaliação." — resposta atual do ChatGPT sobre o Instituto.</p>
+      </div>
+    </div>
+    <div class="alerta">
+      <p class="alerta-titulo">Simulação de IA — O que acontece hoje</p>
+      <p class="alerta-texto">"Para perguntas sobre os melhores locais, um LLM provavelmente listaria clínicas que possuem sites com conteúdo informativo e dados estruturados. O Instituto Lorenzi Dantas poderia ser mencionado como uma opção com base em sua presença geolocalizada, mas sem destaque ou recomendação de autoridade."</p>
+    </div>
+  </section>
+
+  <!-- PERDA -->
+  <section>
+    <p class="section-label">O Custo Real da Invisibilidade</p>
+    <div class="perda-layout">
+      <div class="perda-numeros">
+        <div class="perda-item">
+          <span class="perda-item-label">Pacientes perdidos / mês</span>
+          <span class="perda-item-valor">8–15</span>
+        </div>
+        <div class="perda-item">
+          <span class="perda-item-label">Ticket médio estimado</span>
+          <span class="perda-item-valor">R$ 800</span>
+        </div>
+        <div class="perda-item">
+          <span class="perda-item-label">Perda mensal estimada</span>
+          <span class="perda-item-valor">R$ 12.000</span>
+        </div>
+        <div class="perda-item">
+          <span class="perda-item-label">Perda anual estimada</span>
+          <span class="perda-item-valor">R$ 144.000</span>
+        </div>
+      </div>
+      <div class="perda-texto">
+        <p>O comportamento do paciente mudou. Antes de ligar ou indicar, ele pesquisa. Clínicas odontológicas e estéticas sem presença digital estruturada perdem pacientes toda semana — não para clínicas melhores, mas para clínicas que aparecem.</p>
+        <p>Esses são pacientes que existem, que buscam, e que encontram outra clínica porque o Instituto Lorenzi Dantas não aparece nas respostas das IAs que eles consultam.</p>
+        <p class="perda-destaque">
+          "Seu concorrente não é melhor que você. Ele só é visível. E isso, hoje, é o que decide quem consegue o paciente."
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUÇÃO -->
+  <section>
+    <p class="section-label">A Solução</p>
+    <h2 class="section-title">
+      Infraestrutura digital completa<br>
+      para uma clínica <em>premium</em>
+    </h2>
+    <div class="solucao-items">
+      <div class="solucao-item">
+        <div class="solucao-num">01</div>
+        <h3 class="solucao-nome">Site Premium</h3>
+        <p class="solucao-geo">Design cinematográfico · Dark mode · Animações 3D</p>
+        <p class="solucao-desc">Design alinhado ao posicionamento premium da clínica. Mobile-first, velocidade máxima, formulários e WhatsApp integrados. Copywriting focado em conversão — visitante vira consulta agendada.</p>
+      </div>
+      <div class="solucao-item">
+        <div class="solucao-num">02</div>
+        <h3 class="solucao-nome">SEO Técnico Completo</h3>
+        <p class="solucao-geo">Busca orgânica · Google · Core Web Vitals</p>
+        <p class="solucao-desc">Otimização para "dentista Palmas TO", "harmonização facial Palmas", "fisioterapia 305 Sul" e outros termos que seus pacientes buscam. Google Business Profile das duas unidades configurado e monitorado.</p>
+      </div>
+      <div class="solucao-item">
+        <div class="solucao-num">03</div>
+        <h3 class="solucao-nome">GEO — Otimização para IAs</h3>
+        <p class="solucao-geo">ChatGPT · Gemini · Claude · Perplexity</p>
+        <p class="solucao-desc">Schema.org MedicalBusiness para as duas unidades. Dra. Lillian e Dr. Heitor identificados como especialistas com registro profissional. robots.txt corrigido — 6 bots de IA liberados para indexar e recomendar.</p>
+      </div>
+      <div class="solucao-item">
+        <div class="solucao-num">04</div>
+        <h3 class="solucao-nome">Gestão Mensal</h3>
+        <p class="solucao-geo">Artigos · GMN · Relatório GEO mensal</p>
+        <p class="solucao-desc">2 artigos técnicos por mês que constroem autoridade para IAs e para o Google. Gestão do Google Meu Negócio das duas unidades. Relatório mensal com seu GEO Score vs. concorrentes de Palmas.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PACOTES -->
+  <section>
+    <p class="section-label">Investimento</p>
+    <h2 class="section-title">Escolha o seu <em>nível de presença</em></h2>
+    <div class="pacotes-grid">
+
+      <!-- ESSENCIAL -->
+      <div class="pacote">
+        <p class="pacote-nome">Pacote 01</p>
+        <h3 class="pacote-titulo">Essencial</h3>
+        <p class="pacote-sub">Para existir antes de crescer. Fundação digital completa.</p>
+        <p class="pacote-preco-ancora">Valor de mercado: R$ 8.000</p>
+        <p class="pacote-preco">R$ 2.497 <span>único</span></p>
+        <p class="pacote-setup">+ R$ 990/mês gestão</p>
+        <div class="pacote-divider"></div>
+        <ul class="pacote-items">
+          <li>Site profissional responsivo</li>
+          <li>SEO básico on-page</li>
+          <li>Schema.org nas 2 unidades</li>
+          <li>robots.txt corrigido (6 IAs liberadas)</li>
+          <li>Google Meu Negócio revisado</li>
+          <li>Relatório GEO mensal</li>
+        </ul>
+        <a href="#" class="pacote-cta outline">Quero o Essencial</a>
+      </div>
+
+      <!-- PERFORMANCE — DESTAQUE -->
+      <div class="pacote destaque">
+        <div class="pacote-badge">Recomendado</div>
+        <p class="pacote-nome">Pacote 02</p>
+        <h3 class="pacote-titulo">Protocolo Presença IA</h3>
+        <p class="pacote-sub">Onde o GEO Score começa a se mover nos primeiros 60 dias.</p>
+        <p class="pacote-preco-ancora">Valor de mercado: R$ 15.600/ano</p>
+        <p class="pacote-preco">R$ 1.497 <span>/mês · 12 meses</span></p>
+        <p class="pacote-setup">Setup incluso — R$ 0 de implantação</p>
+        <div class="pacote-divider"></div>
+        <ul class="pacote-items">
+          <li class="destaque-item">Site cinematográfico dark mode + animações 3D</li>
+          <li class="destaque-item">GEO completo — 6 plataformas de IA</li>
+          <li class="destaque-item">2 artigos/mês otimizados para IAs e Google</li>
+          <li>Gestão GMN das 2 unidades</li>
+          <li>Relatório GEO Score vs. 5 concorrentes</li>
+          <li>SEO técnico completo</li>
+          <li>Suporte prioritário WhatsApp</li>
+        </ul>
+        <a href="#" class="pacote-cta solid">Quero o Protocolo</a>
+      </div>
+
+      <!-- DOMINÂNCIA -->
+      <div class="pacote">
+        <p class="pacote-nome">Pacote 03</p>
+        <h3 class="pacote-titulo">Dominância Palmas</h3>
+        <p class="pacote-sub">Para ser a referência de estética e odonto em Palmas nos próximos 18 meses.</p>
+        <p class="pacote-preco-ancora">Valor de mercado: R$ 26.400/ano</p>
+        <p class="pacote-preco">R$ 2.197 <span>/mês · 12 meses</span></p>
+        <p class="pacote-setup">Setup incluso — R$ 0 de implantação</p>
+        <div class="pacote-divider"></div>
+        <ul class="pacote-items">
+          <li class="destaque-item">Tudo do Protocolo Presença IA</li>
+          <li class="destaque-item">4 artigos/mês (dobro do padrão)</li>
+          <li class="destaque-item">FAQ estruturado mensal para IAs</li>
+          <li>Estratégia de menções e backlinks de autoridade</li>
+          <li>Posicionamento da Dra. Lillian e Dr. Heitor como especialistas citáveis pelas IAs</li>
+          <li>Revisão trimestral de estratégia</li>
+        </ul>
+        <a href="#" class="pacote-cta outline">Quero a Dominância</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- GARANTIA -->
+  <section>
+    <p class="section-label">Sem Risco</p>
+    <h2 class="section-title">A garantia que <em>elimina</em> a dúvida</h2>
+    <div class="garantia-box">
+      <div class="garantia-num">90</div>
+      <div>
+        <h3 class="garantia-titulo">Em 90 dias seu GEO Score passa de 38 para <em>65+</em><br>ou você recebe tudo de volta.</h3>
+        <p class="garantia-texto">Se em 90 dias o GEO Score do Instituto Lorenzi Dantas não subir de 38 para no mínimo 65/100, você recebe 100% do que pagou de volta. Sem perguntas. Sem burocracia. Você pode verificar o score pelo mesmo sistema que usamos — transparência total. Oferecemos essa garantia porque sabemos exatamente o que seu site precisa para chegar lá. O risco é nosso.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FECHAMENTO -->
+  <div class="fechamento">
+    <div class="fechamento-bg"></div>
+    <p class="fechamento-quote">
+      "Você já construiu uma clínica excelente. O problema não é o que você entrega — é que as IAs <em>não sabem que você existe.</em> Isso a gente corrige em 30 dias. A única pergunta é: você quer corrigir antes ou depois do seu concorrente?"
+    </p>
+    <a href="#" class="fechamento-cta">Quero começar agora</a>
+    <p class="fechamento-validade">Proposta válida por 10 dias · 1 vaga disponível em Palmas</p>
+  </div>
+
+  <!-- RODAPÉ -->
+  <footer>
+    <span>GEO Masters · geomasters.com.br</span>
+    <span>Instituto Lorenzi Dantas · Proposta Confidencial · Abril 2026</span>
+  </footer>
+
+</body>
+</html>

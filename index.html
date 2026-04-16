@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instituto Lorenzi Dantas — A Escultura Viva</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,300;1,400&family=Inter:wght@200;300;400&display=swap" rel="stylesheet" />
+
+  <!-- GSAP + ScrollTrigger + Lenis -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+
+  <style>
+    :root {
+      --alabaster: #F7F5F2;
+      --obsidian: #1A1816;
+      --gold: #C9A96E;
+      --gold-muted: rgba(201,169,110,0.15);
+      --text-dark: #1A1816;
+      --text-light: #F7F5F2;
+      --text-muted: rgba(247,245,242,0.45);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { overflow-x: hidden; }
+
+    body {
+      background: var(--alabaster);
+      color: var(--text-dark);
+      font-family: 'Inter', sans-serif;
+      cursor: none;
+      overflow-x: hidden;
+    }
+
+    /* ─── CURSOR ─── */
+    #cursor-dot {
+      width: 5px; height: 5px;
+      background: var(--gold);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
+    #cursor-ring {
+      width: 28px; height: 28px;
+      border: 1px solid rgba(201,169,110,0.5);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.35s ease, height 0.35s ease, border-color 0.35s ease, opacity 0.35s ease;
+    }
+    #cursor-ring.hover {
+      width: 44px; height: 44px;
+      border-color: rgba(201,169,110,0.9);
+    }
+    #cursor-ring.light {
+      border-color: rgba(247,245,242,0.4);
+    }
+    #cursor-ring.light.hover {
+      border-color: rgba(247,245,242,0.8);
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 32px 60px;
+      mix-blend-mode: difference;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.82rem;
+      font-weight: 400;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--alabaster);
+      text-decoration: none;
+    }
+    .nav-logo small {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      opacity: 0.6;
+      margin-top: 3px;
+    }
+    .nav-cta {
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--alabaster);
+      text-decoration: none;
+      position: relative;
+    }
+    .nav-cta::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--alabaster);
+      transition: width 0.4s ease;
+    }
+    .nav-cta:hover::after { width: 100%; }
+
+    /* ─── HERO ─── */
+    #hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      background: var(--obsidian);
+    }
+
+    #particles-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: url('imagens%20instagram/aI/recep%C3%A7%C3%A3o.png') center/cover no-repeat;
+      opacity: 0.32;
+      filter: blur(1px) saturate(0.5) brightness(0.7);
+      z-index: 0;
+    }
+
+    .hero-liquid {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 50%, rgba(201,169,110,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 30%, rgba(201,169,110,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 100% 100% at 50% 100%, rgba(26,24,22,0.9) 0%, transparent 50%);
+      animation: liquidShift 12s ease-in-out infinite alternate;
+    }
+    @keyframes liquidShift {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 900px;
+      padding: 0 40px;
+    }
+    .hero-eyebrow {
+      font-size: 0.52rem;
+      letter-spacing: 0.55em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 40px;
+      opacity: 0;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 7vw, 8rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.05;
+      color: var(--alabaster);
+      margin-bottom: 56px;
+      opacity: 0;
+    }
+    .hero-title span { font-style: normal; font-weight: 700; }
+    .hero-btn {
+      display: inline-block;
+      font-size: 0.56rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--alabaster);
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 12px;
+      opacity: 0;
+    }
+    .hero-btn-line {
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 1px;
+      width: 0;
+      background: var(--gold);
+      transition: width 0.6s ease;
+    }
+    .hero-btn:hover .hero-btn-line { width: 100%; }
+    .hero-sub {
+      font-size: 0.82rem;
+      line-height: 2;
+      font-weight: 300;
+      color: rgba(247,245,242,0.55);
+      max-width: 520px;
+      margin: 0 auto 48px;
+      opacity: 0;
+      transform: translateY(20px);
+      letter-spacing: 0.02em;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px; left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      z-index: 3;
+      opacity: 0;
+    }
+    .hero-scroll span {
+      font-size: 0.45rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .scroll-bar {
+      width: 1px; height: 50px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollDrop 2s ease infinite;
+    }
+    @keyframes scrollDrop {
+      0%   { transform: scaleY(0); transform-origin: top; opacity: 0; }
+      50%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+      100% { transform: scaleY(1); transform-origin: bottom; opacity: 0; }
+    }
+
+    /* ─── NÚMEROS / STATS ─── */
+    #stats {
+      background: var(--obsidian);
+      padding: 80px 60px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      border-top: 1px solid rgba(201,169,110,0.12);
+    }
+    .stat-item {
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border-right: 1px solid rgba(201,169,110,0.1);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 5vw, 5.5rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .stat-num sup {
+      font-size: 0.45em;
+      vertical-align: super;
+      opacity: 0.7;
+    }
+    .stat-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(247,245,242,0.4);
+      line-height: 1.8;
+    }
+
+    /* ─── FILOSOFIA (Pinned horizontal) ─── */
+    #filosofia-wrap { overflow: hidden; }
+    #filosofia {
+      height: 100vh;
+      display: flex;
+      align-items: stretch;
+      background: var(--alabaster);
+    }
+    .filosofia-panel {
+      min-width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0 10vw;
+      position: relative;
+      overflow: hidden;
+    }
+    .filosofia-panel:nth-child(1) { background: var(--alabaster); }
+    .filosofia-panel:nth-child(2) { background: #F0EDE8; }
+    .filosofia-panel:nth-child(3) { background: var(--obsidian); }
+
+    .panel-num {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(8rem, 15vw, 18rem);
+      font-weight: 700;
+      font-style: italic;
+      position: absolute;
+      right: 8vw;
+      top: 50%;
+      transform: translateY(-50%);
+      line-height: 1;
+      pointer-events: none;
+    }
+    .filosofia-panel:nth-child(1) .panel-num { color: rgba(26,24,22,0.04); }
+    .filosofia-panel:nth-child(2) .panel-num { color: rgba(26,24,22,0.04); }
+    .filosofia-panel:nth-child(3) .panel-num { color: rgba(247,245,242,0.04); }
+
+    .panel-content { max-width: 560px; position: relative; z-index: 2; }
+    .panel-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .panel-tag::before {
+      content: '';
+      width: 24px; height: 1px;
+      background: var(--gold);
+    }
+    .panel-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3.8rem);
+      font-weight: 300;
+      line-height: 1.15;
+      margin-bottom: 28px;
+    }
+    .filosofia-panel:nth-child(1) .panel-title { color: var(--obsidian); }
+    .filosofia-panel:nth-child(2) .panel-title { color: var(--obsidian); }
+    .filosofia-panel:nth-child(3) .panel-title { color: var(--alabaster); }
+    .panel-title em { font-style: italic; color: var(--gold); }
+    .panel-body {
+      font-size: 0.85rem;
+      line-height: 2.1;
+      font-weight: 300;
+    }
+    .filosofia-panel:nth-child(1) .panel-body { color: rgba(26,24,22,0.72); }
+    .filosofia-panel:nth-child(2) .panel-body { color: rgba(26,24,22,0.72); }
+    .filosofia-panel:nth-child(3) .panel-body { color: rgba(247,245,242,0.72); }
+
+    /* ─── ESPECIALIDADES ─── */
+    #especialidades {
+      background: var(--obsidian);
+      padding: 140px 60px;
+    }
+    .esp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 80px;
+      border-bottom: 1px solid rgba(247,245,242,0.08);
+      padding-bottom: 48px;
+    }
+    .esp-header-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3.5rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--alabaster);
+      line-height: 1.1;
+    }
+    .esp-header-sub {
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(247,245,242,0.45);
+      max-width: 200px;
+      text-align: right;
+      line-height: 2;
+    }
+
+    .esp-lista { list-style: none; }
+    .esp-item {
+      border-bottom: 1px solid rgba(247,245,242,0.06);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Shimmer dourado — luz que desliza da esquerda à direita periodicamente */
+    .esp-item::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; bottom: 0;
+      width: 60%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(201,169,110,0.06) 40%,
+        rgba(201,169,110,0.13) 50%,
+        rgba(201,169,110,0.06) 60%,
+        transparent 100%
+      );
+      animation: espShimmer 5s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .esp-item:nth-child(2)::after { animation-delay: 1s; }
+    .esp-item:nth-child(3)::after { animation-delay: 2s; }
+    .esp-item:nth-child(4)::after { animation-delay: 3s; }
+    .esp-item:nth-child(5)::after { animation-delay: 4s; }
+    @keyframes espShimmer {
+      0%   { left: -100%; opacity: 0; }
+      10%  { opacity: 1; }
+      50%  { left: 140%; opacity: 1; }
+      60%  { opacity: 0; }
+      100% { left: 140%; opacity: 0; }
+    }
+
+    /* Fundo dourado no hover */
+    .esp-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 0;
+      background: rgba(201,169,110,0.06);
+      transition: width 0.5s ease;
+      z-index: 0;
+    }
+    .esp-item:hover::before { width: 100%; }
+
+    /* Header clicável do item */
+    .esp-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 32px 0;
+      position: relative;
+      z-index: 1;
+      transition: padding-left 0.4s ease;
+    }
+    .esp-item:hover .esp-item-header { padding-left: 20px; }
+
+    .esp-item-left {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      position: relative;
+      z-index: 1;
+    }
+    .esp-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.82rem;
+      font-style: italic;
+      color: var(--gold);
+      opacity: 0.8;
+      width: 28px;
+    }
+    .esp-nome {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+      font-weight: 300;
+      color: var(--alabaster);
+      transition: color 0.3s;
+    }
+    .esp-item:hover .esp-nome { color: var(--gold); }
+    .esp-subs {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(247,245,242,0.45);
+      position: relative;
+      z-index: 1;
+      transition: color 0.3s;
+    }
+    .esp-item:hover .esp-subs { color: rgba(201,169,110,0.8); }
+
+    /* Toggle */
+    .esp-toggle {
+      width: 32px; height: 32px;
+      border: 1px solid rgba(247,245,242,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--gold);
+      font-size: 1.2rem;
+      font-weight: 300;
+      line-height: 1;
+      transition: border-color 0.3s, transform 0.4s ease, background 0.3s;
+      position: relative;
+      z-index: 1;
+      user-select: none;
+    }
+    .esp-item.open .esp-toggle {
+      border-color: var(--gold);
+      transform: rotate(45deg);
+      background: rgba(201,169,110,0.1);
+    }
+
+    /* Drawer — accordion rico */
+    .esp-drawer {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.6s cubic-bezier(0.4,0,0.2,1);
+      position: relative;
+      z-index: 1;
+    }
+    .esp-item.open .esp-drawer { max-height: 600px; }
+    .esp-drawer-inner {
+      padding: 0 0 48px 60px;
+      border-top: 1px solid rgba(247,245,242,0.06);
+    }
+    .esp-drawer-texto {
+      font-size: 0.85rem;
+      line-height: 2.1;
+      font-weight: 300;
+      color: rgba(247,245,242,0.65);
+      max-width: 580px;
+      margin-bottom: 28px;
+      padding-top: 32px;
+    }
+    .esp-drawer-lista {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+    .esp-drawer-lista li {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: rgba(247,245,242,0.5);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .esp-drawer-lista li::before {
+      content: '';
+      width: 16px; height: 1px;
+      background: var(--gold);
+      opacity: 0.5;
+      flex-shrink: 0;
+    }
+    /* Espaço reservado para galeria antes/depois */
+    .esp-drawer-galeria {
+      margin-bottom: 32px;
+      min-height: 0;
+      transition: min-height 0.3s;
+    }
+    .esp-drawer-galeria:not(:empty) { min-height: 200px; }
+    .esp-drawer-cta {
+      font-size: 0.62rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(247,245,242,0.5);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      transition: color 0.3s;
+    }
+    .esp-drawer-cta span {
+      width: 20px; height: 1px;
+      background: var(--gold);
+      opacity: 0.5;
+      transition: width 0.4s;
+    }
+    .esp-drawer-cta:hover { color: var(--gold); }
+    .esp-drawer-cta:hover span { width: 36px; opacity: 1; }
+
+    /* Ocultar mobile legacy */
+    .esp-subs-mobile { display: none; }
+
+    /* Imagem hover especialidades */
+    .esp-hover-img {
+      position: fixed;
+      width: 320px; height: 420px;
+      pointer-events: none;
+      z-index: 50;
+      opacity: 0;
+      border-radius: 4px;
+      overflow: hidden;
+      transition: opacity 0.3s ease;
+      transform: translate(-50%, -50%);
+    }
+    .esp-hover-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: saturate(0.7) brightness(0.85);
+      transform: scale(1.1);
+      transition: transform 0.6s ease, filter 0.6s ease;
+    }
+    .esp-hover-img.visible img { transform: scale(1); filter: saturate(1) brightness(1); }
+
+    /* ─── TRATAMENTOS ESTÉTICOS ─── */
+    #tratamentos {
+      background: var(--alabaster);
+      padding: 140px 60px;
+    }
+    .trat-header {
+      max-width: 640px;
+      margin-bottom: 80px;
+    }
+    .trat-eyebrow {
+      font-size: 0.62rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .trat-eyebrow::before {
+      content: '';
+      width: 28px; height: 1px;
+      background: var(--gold);
+    }
+    .trat-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 4vw, 4rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--obsidian);
+      margin-bottom: 24px;
+    }
+    .trat-title em { font-style: italic; color: var(--gold); }
+    .trat-desc {
+      font-size: 0.85rem;
+      line-height: 2;
+      font-weight: 300;
+      color: rgba(26,24,22,0.6);
+      max-width: 480px;
+    }
+    .trat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+    .trat-card {
+      background: #F0EDE8;
+      padding: 52px 44px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s ease;
+    }
+    .trat-card:nth-child(2n) { background: var(--alabaster); }
+    .trat-card:hover { background: var(--obsidian); }
+    .trat-card:hover .trat-num,
+    .trat-card:hover .trat-nome,
+    .trat-card:hover .trat-texto,
+    .trat-card:hover .trat-beneficios span { color: var(--alabaster); }
+    .trat-card:hover .trat-beneficios span { color: rgba(247,245,242,0.55); }
+    .trat-card:hover .trat-cta { color: var(--gold); }
+    .trat-card:hover .trat-cta span { background: var(--gold); }
+    .trat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.72rem;
+      font-style: italic;
+      color: var(--gold);
+      margin-bottom: 20px;
+      transition: color 0.4s;
+    }
+    .trat-nome {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.3rem, 2vw, 1.9rem);
+      font-weight: 300;
+      color: var(--obsidian);
+      margin-bottom: 16px;
+      line-height: 1.2;
+      transition: color 0.4s;
+    }
+    .trat-texto {
+      font-size: 0.82rem;
+      line-height: 2;
+      font-weight: 300;
+      color: rgba(26,24,22,0.65);
+      margin-bottom: 24px;
+      transition: color 0.4s;
+    }
+    .trat-beneficios {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 32px;
+    }
+    .trat-beneficios span {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(26,24,22,0.45);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: color 0.4s;
+    }
+    .trat-beneficios span::before {
+      content: '';
+      width: 12px; height: 1px;
+      background: var(--gold);
+      opacity: 0.6;
+      flex-shrink: 0;
+    }
+    .trat-cta {
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(26,24,22,0.5);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      transition: color 0.4s;
+    }
+    .trat-cta span {
+      width: 20px; height: 1px;
+      background: rgba(26,24,22,0.3);
+      transition: width 0.4s, background 0.4s;
+    }
+    .trat-cta:hover span { width: 36px; }
+    @media (max-width: 900px) {
+      #tratamentos { padding: 100px 24px; }
+      .trat-grid { grid-template-columns: 1fr; gap: 2px; }
+      .trat-card { padding: 44px 28px; }
+    }
+
+    /* ─── EQUIPE ─── */
+    #equipe {
+      background: var(--alabaster);
+      padding: 140px 60px;
+    }
+    .equipe-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 80px;
+      border-bottom: 1px solid rgba(26,24,22,0.08);
+      padding-bottom: 48px;
+    }
+    .equipe-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3.5rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--obsidian);
+      line-height: 1.1;
+    }
+    .equipe-header p {
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(26,24,22,0.4);
+      max-width: 200px;
+      text-align: right;
+      line-height: 2;
+    }
+    .equipe-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+    .doutor-card { position: relative; overflow: hidden; cursor: pointer; }
+    .doutor-foto { aspect-ratio: 3/4; overflow: hidden; }
+    .doutor-foto img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.9) saturate(0.85);
+      transition: transform 0.8s ease;
+    }
+    .doutor-card:hover .doutor-foto img { transform: scale(1.03); }
+    .doutor-info { padding: 32px 0 0; }
+    .doutor-cargo {
+      font-size: 0.72rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .doutor-nome {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: var(--obsidian);
+      margin-bottom: 6px;
+    }
+    .doutor-especialidade {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(26,24,22,0.75);
+    }
+    .doutor-bio {
+      font-size: 0.82rem;
+      line-height: 2;
+      font-weight: 300;
+      color: rgba(26,24,22,0.68);
+      margin-top: 16px;
+    }
+    .doutor-creds {
+      list-style: none;
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .doutor-creds li {
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      color: rgba(26,24,22,0.55);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .doutor-creds li::before {
+      content: '';
+      width: 14px; height: 1px;
+      background: var(--gold);
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+    .doutor-frase {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: rgba(26,24,22,0.7);
+      margin-top: 20px;
+      line-height: 1.8;
+      padding-top: 20px;
+      border-top: 1px solid rgba(26,24,22,0.07);
+    }
+
+    /* ─── DEPOIMENTOS ─── */
+    #depoimentos {
+      background: #F0EDE8;
+      padding: 120px 60px;
+      overflow: hidden;
+    }
+    .dep-eyebrow {
+      font-size: 0.62rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 64px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .dep-eyebrow::before {
+      content: '';
+      width: 32px; height: 1px;
+      background: var(--gold);
+    }
+    .dep-track {
+      display: flex;
+      gap: 40px;
+      animation: depScroll 28s linear infinite;
+    }
+    .dep-track:hover { animation-play-state: paused; }
+    @keyframes depScroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .dep-card {
+      min-width: 460px;
+      background: var(--alabaster);
+      padding: 48px 44px;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .dep-card::before {
+      content: '"';
+      font-family: 'Playfair Display', serif;
+      font-size: 6rem;
+      font-style: italic;
+      color: var(--gold);
+      opacity: 0.15;
+      position: absolute;
+      top: 20px; left: 36px;
+      line-height: 1;
+    }
+    .dep-texto {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1rem;
+      line-height: 1.9;
+      color: rgba(26,24,22,0.78);
+      margin-bottom: 28px;
+      position: relative;
+    }
+    .dep-autor {
+      font-size: 0.62rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(26,24,22,0.4);
+    }
+    .dep-autor strong {
+      display: block;
+      font-weight: 400;
+      color: var(--obsidian);
+      margin-bottom: 4px;
+      font-size: 0.72rem;
+    }
+
+    /* ─── UNIDADES ─── */
+    #unidades {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+      position: relative;
+    }
+    .unidade {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding: 60px;
+      min-height: 70vh;
+    }
+    .unidade-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.4) saturate(0.6);
+      will-change: transform;
+    }
+    .unidade:hover .unidade-bg { filter: brightness(0.5) saturate(0.8); transition: filter 0.8s ease; }
+    .unidade-1 .unidade-bg { background-image: url('imagens%20instagram/aI/fachada.png'); filter: brightness(0.3) saturate(0.5); }
+    .unidade-2 .unidade-bg { background-image: url('imagens%20instagram/aI/recep%C3%A7%C3%A3o.png'); filter: brightness(0.25) saturate(0.4) sepia(0.2); }
+    .unidade-conteudo { position: relative; z-index: 2; }
+    .unidade-badge {
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      border: 1px solid rgba(201,169,110,0.3);
+      padding: 5px 12px;
+      display: inline-block;
+    }
+    .unidade-nome {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3.5rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--alabaster);
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+    .unidade-bairro {
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(247,245,242,0.5);
+      margin-bottom: 32px;
+    }
+    .unidade-servicos {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 40px;
+    }
+    .unidade-servicos li {
+      font-size: 0.82rem;
+      color: rgba(247,245,242,0.7);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .unidade-servicos li::before {
+      content: '';
+      width: 12px; height: 1px;
+      background: var(--gold);
+      opacity: 0.5;
+    }
+    .unidade-cta {
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--alabaster);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .unidade-cta::after {
+      content: '';
+      width: 20px; height: 1px;
+      background: var(--gold);
+      transition: width 0.4s;
+    }
+    .unidade-cta:hover::after { width: 40px; }
+    #unidades::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(201,169,110,0.3), transparent);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--obsidian);
+      border-top: 1px solid rgba(247,245,242,0.06);
+      padding: 80px 60px 60px;
+    }
+    .footer-frase {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3vw, 3rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--alabaster);
+      max-width: 700px;
+      line-height: 1.4;
+      margin-bottom: 56px;
+      opacity: 0.85;
+    }
+    .footer-frase em { color: var(--gold); font-style: normal; }
+    .footer-cta-wrap {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      margin-bottom: 80px;
+    }
+    .footer-wpp {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.58rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--obsidian);
+      background: var(--gold);
+      padding: 16px 36px;
+      text-decoration: none;
+      transition: opacity 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .footer-wpp::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      opacity: 0;
+      animation: wppPulse 2.5s ease infinite;
+    }
+    @keyframes wppPulse {
+      0%, 100% { transform: scale(1); opacity: 0; }
+      50% { transform: scale(1.08); opacity: 0.15; }
+    }
+    .footer-wpp:hover { opacity: 0.85; }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 40px;
+      border-top: 1px solid rgba(247,245,242,0.06);
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(247,245,242,0.3);
+      text-decoration: none;
+    }
+    .footer-copy { font-size: 0.52rem; letter-spacing: 0.1em; color: rgba(247,245,242,0.18); }
+    .footer-links { display: flex; gap: 32px; list-style: none; }
+    .footer-links a {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(247,245,242,0.25);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+
+    /* ─── WHATSAPP FLUTUANTE ─── */
+    #wpp-float {
+      position: fixed;
+      bottom: 36px;
+      right: 36px;
+      z-index: 200;
+      height: 56px;
+      background: var(--gold);
+      border-radius: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      box-shadow: 0 4px 24px rgba(201,169,110,0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, padding 0.4s ease;
+      opacity: 0;
+      padding: 0 18px;
+      overflow: hidden;
+    }
+    #wpp-float:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 36px rgba(201,169,110,0.55);
+    }
+    #wpp-float svg { color: var(--obsidian); flex-shrink: 0; }
+    #wpp-float .wpp-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--obsidian);
+      font-weight: 400;
+      white-space: nowrap;
+    }
+    /* Anel de pulso */
+    #wpp-float::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 100px;
+      border: 2px solid var(--gold);
+      animation: wppPulse 2.4s ease-out infinite;
+      pointer-events: none;
+    }
+    @keyframes wppPulse {
+      0%   { transform: scale(1);   opacity: 0.7; }
+      70%  { transform: scale(1.5); opacity: 0; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+    @media (max-width: 900px) {
+      #wpp-float { height: 60px; padding: 0 20px; bottom: 24px; right: 20px; }
+    }
+
+    /* ─── REVEAL ─── */
+    .g-reveal {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 900px) {
+      body { cursor: auto; }
+      #cursor-dot, #cursor-ring { display: none; }
+      nav { padding: 20px 24px; }
+      #hero { min-height: 100vh; height: auto; padding: 120px 24px 80px; }
+      .hero-title { font-size: clamp(2.8rem, 10vw, 5rem); }
+
+      /* Stats mobile */
+      #stats { grid-template-columns: 1fr; padding: 60px 24px; gap: 0; }
+      .stat-item { border-right: none; border-bottom: 1px solid rgba(201,169,110,0.1); padding: 36px 24px; }
+      .stat-item:last-child { border-bottom: none; }
+
+      /* Filosofia mobile: stack vertical */
+      #filosofia-wrap { overflow: visible; }
+      #filosofia { height: auto; flex-direction: column; }
+      .filosofia-panel { min-width: 100%; height: auto; padding: 80px 24px; }
+      .panel-num { display: none; }
+
+      #especialidades { padding: 100px 24px; }
+      .esp-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .esp-header-sub { text-align: left; }
+      .esp-nome { font-size: clamp(1.2rem, 5vw, 1.8rem); }
+      .esp-subs { display: none; }
+      .esp-hover-img { display: none; }
+      .esp-drawer-inner { padding: 0 0 36px 0; }
+      .esp-item-header { padding: 28px 0; }
+      .esp-subs-mobile {
+        width: 100%;
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1);
+        padding-left: 44px;
+      }
+      .esp-subs-mobile-inner {
+        padding: 12px 0 20px;
+        font-size: 0.72rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(247,245,242,0.55);
+        line-height: 2.4;
+      }
+      .esp-subs-mobile-inner span {
+        display: block;
+        border-bottom: 1px solid rgba(247,245,242,0.05);
+        padding: 4px 0;
+      }
+      .esp-item.open .esp-subs-mobile { max-height: 200px; }
+      .esp-item.open .esp-nome { color: var(--gold); }
+      .esp-hover-img { display: none; }
+
+      #equipe { padding: 100px 24px; }
+      .equipe-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .equipe-header p { text-align: left; }
+      .equipe-grid { grid-template-columns: 1fr; gap: 64px; }
+
+      #depoimentos { padding: 80px 24px; }
+      .dep-card { min-width: 320px; padding: 36px 28px; }
+
+      #unidades { grid-template-columns: 1fr; }
+      .unidade { min-height: 60vh; padding: 40px 24px; }
+
+      footer { padding: 60px 24px 40px; }
+      .footer-bottom { flex-direction: column; gap: 20px; align-items: flex-start; }
+      .footer-links { display: none; }
+
+      #wpp-float { bottom: 24px; right: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- WhatsApp flutuante -->
+  <a href="https://wa.me/5563999999999" id="wpp-float" aria-label="Agendar pelo WhatsApp">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+    </svg>
+    <span class="wpp-label">Agendar</span>
+  </a>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">
+      Instituto Lorenzi Dantas
+      <small>Palmas · Tocantins</small>
+    </a>
+    <a href="https://wa.me/5563999999999" class="nav-cta">Agendar</a>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section id="hero">
+    <canvas id="particles-canvas"></canvas>
+    <div class="hero-bg"></div>
+    <div class="hero-liquid"></div>
+
+    <div class="hero-content">
+      <p class="hero-eyebrow">Odontologia Estética · Palmas — TO</p>
+      <h1 class="hero-title">
+        A Arte da Sua<br><span>Melhor Versão</span>
+      </h1>
+      <p class="hero-sub">Clareamento dental, lentes de contato dental e harmonização do sorriso.<br>Resultados naturais que transformam — e que só você vai notar.</p>
+      <a href="https://wa.me/5563999999999" class="hero-btn">
+        Agendar avaliação no WhatsApp
+        <span class="hero-btn-line"></span>
+      </a>
+    </div>
+
+    <div class="hero-scroll">
+      <span>Role</span>
+      <div class="scroll-bar"></div>
+    </div>
+  </section>
+
+  <!-- ─── STATS ─── -->
+  <section id="stats">
+    <div class="stat-item g-reveal">
+      <div class="stat-num" data-target="12"><span class="count">0</span><sup>anos</sup></div>
+      <div class="stat-label">De excelência<br>em Palmas</div>
+    </div>
+    <div class="stat-item g-reveal">
+      <div class="stat-num" data-target="2"><span class="count">0</span><sup>unidades</sup></div>
+      <div class="stat-label">Para te atender<br>com conforto</div>
+    </div>
+    <div class="stat-item g-reveal">
+      <div class="stat-num" data-target="5"><span class="count">0</span><sup>especialidades</sup></div>
+      <div class="stat-label">Uma visão<br>integrada de cuidado</div>
+    </div>
+  </section>
+
+  <!-- ─── FILOSOFIA (Horizontal Scroll) ─── -->
+  <div id="filosofia-wrap">
+      <div id="filosofia">
+
+        <div class="filosofia-panel">
+          <div class="panel-num">01</div>
+          <div class="panel-content">
+            <div class="panel-tag">A Fundadora</div>
+            <h2 class="panel-title">Precisão que<br><em>transforma</em></h2>
+            <p class="panel-body">
+              Dra. Lillian Lorenzi une odontologia de alta performance e harmonização orofacial numa visão única: a simetria do rosto como expressão de quem você realmente é. Cada procedimento é desenhado para revelar, nunca para impor.
+            </p>
+          </div>
+        </div>
+
+        <div class="filosofia-panel">
+          <div class="panel-num">02</div>
+          <div class="panel-content">
+            <div class="panel-tag">O Co-Fundador</div>
+            <h2 class="panel-title">Fundação que<br><em>sustenta tudo</em></h2>
+            <p class="panel-body">
+              Dr. Heitor Dantas trata o corpo como arquitetura viva. Quiropraxia e fisioterapia não são apenas alívio de dor — são o alicerce sobre o qual beleza e bem-estar se constroem. Sem equilíbrio interno, nenhuma transformação externa dura.
+            </p>
+          </div>
+        </div>
+
+        <div class="filosofia-panel">
+          <div class="panel-num">03</div>
+          <div class="panel-content">
+            <div class="panel-tag">A Filosofia</div>
+            <h2 class="panel-title">Beleza e saúde<br><em>como uma só coisa</em></h2>
+            <p class="panel-body">
+              No Instituto Lorenzi Dantas, aparência e função nunca competem. Elas se completam. Duas unidades em Palmas, cinco especialidades, um único compromisso: cuidado que transforma de dentro para fora.
+            </p>
+          </div>
+        </div>
+
+      </div>
+  </div>
+
+  <!-- ─── ESPECIALIDADES ─── -->
+  <section id="especialidades">
+    <div class="esp-header g-reveal">
+      <h2 class="esp-header-title">Nossas<br>Especialidades</h2>
+      <p class="esp-header-sub">Cinco disciplinas. Uma visão integrada de cuidado.</p>
+    </div>
+
+    <ul class="esp-lista">
+
+      <li class="esp-item g-reveal" data-img="imagens%20instagram/aI/harmoniza%C3%A7%C3%A3o%20orofacial.png">
+        <div class="esp-item-header">
+          <div class="esp-item-left">
+            <span class="esp-num">01</span>
+            <span class="esp-nome">Harmonização Orofacial</span>
+          </div>
+          <span class="esp-subs">Botox · Preenchimento · Fios PDO · Ultraformer</span>
+          <span class="esp-toggle">+</span>
+        </div>
+        <div class="esp-drawer">
+          <div class="esp-drawer-inner">
+            <p class="esp-drawer-texto">Procedimentos minimamente invasivos que equilibram proporções do rosto com leveza e naturalidade. A Dra. Lillian avalia cada paciente de forma individual — o objetivo é revelar harmonia, não criar uma face nova.</p>
+            <ul class="esp-drawer-lista">
+              <li>Botox para expressão e prevenção</li>
+              <li>Preenchimento labial e malar</li>
+              <li>Fios PDO para sustentação e rejuvenescimento</li>
+              <li>Ultraformer — lifting sem cirurgia</li>
+            </ul>
+            <!-- Espaço reservado para antes e depois -->
+            <div class="esp-drawer-galeria" data-placeholder="Imagens antes e depois em breve"></div>
+            <a href="https://wa.me/5563999999999" class="esp-drawer-cta">Agendar avaliação<span></span></a>
+          </div>
+        </div>
+      </li>
+
+      <li class="esp-item g-reveal" data-img="imagens%20instagram/aI/odontologia.png">
+        <div class="esp-item-header">
+          <div class="esp-item-left">
+            <span class="esp-num">02</span>
+            <span class="esp-nome">Odontologia Estética</span>
+          </div>
+          <span class="esp-subs">Implantes · Facetas · Clareamento · Alinhadores</span>
+          <span class="esp-toggle">+</span>
+        </div>
+        <div class="esp-drawer">
+          <div class="esp-drawer-inner">
+            <p class="esp-drawer-texto">Do clareamento às lentes de contato dental, nossa odontologia estética entrega resultados que as pessoas percebem sem saber o que mudou. Cada sorriso é planejado em harmonia com o rosto inteiro.</p>
+            <ul class="esp-drawer-lista">
+              <li>Clareamento dental — sessão única ou progressivo</li>
+              <li>Lentes de contato dental (facetas ultrafinas)</li>
+              <li>Alinhadores invisíveis</li>
+              <li>Implantes e próteses sobre implante</li>
+            </ul>
+            <div class="esp-drawer-galeria" data-placeholder="Imagens antes e depois em breve"></div>
+            <a href="https://wa.me/5563999999999" class="esp-drawer-cta">Agendar avaliação<span></span></a>
+          </div>
+        </div>
+      </li>
+
+      <li class="esp-item g-reveal" data-img="imagens%20instagram/aI/estetica%20avan%C3%A7ada.png">
+        <div class="esp-item-header">
+          <div class="esp-item-left">
+            <span class="esp-num">03</span>
+            <span class="esp-nome">Estética Avançada</span>
+          </div>
+          <span class="esp-subs">Microagulhamento · Radiofrequência · Drenagem</span>
+          <span class="esp-toggle">+</span>
+        </div>
+        <div class="esp-drawer">
+          <div class="esp-drawer-inner">
+            <p class="esp-drawer-texto">Tratamentos corporais e faciais com tecnologia de ponta. Pele renovada, contornos definidos e bem-estar que começa de dentro. Protocolos personalizados conforme a necessidade de cada paciente.</p>
+            <ul class="esp-drawer-lista">
+              <li>Microagulhamento com fatores de crescimento</li>
+              <li>Radiofrequência facial e corporal</li>
+              <li>Drenagem linfática especializada</li>
+              <li>Protocolos anti-aging e firmeza</li>
+            </ul>
+            <div class="esp-drawer-galeria" data-placeholder="Imagens antes e depois em breve"></div>
+            <a href="https://wa.me/5563999999999" class="esp-drawer-cta">Agendar avaliação<span></span></a>
+          </div>
+        </div>
+      </li>
+
+      <li class="esp-item g-reveal" data-img="imagens%20instagram/aI/fisitoterapia.png">
+        <div class="esp-item-header">
+          <div class="esp-item-left">
+            <span class="esp-num">04</span>
+            <span class="esp-nome">Fisioterapia & Quiropraxia</span>
+          </div>
+          <span class="esp-subs">Reabilitação · Biomecânica · Equilíbrio</span>
+          <span class="esp-toggle">+</span>
+        </div>
+        <div class="esp-drawer">
+          <div class="esp-drawer-inner">
+            <p class="esp-drawer-texto">O Dr. Heitor trata o que você sente — dor, limitação, postura — com uma abordagem direta que vai à causa. Para muitos pacientes, a primeira sessão já muda o dia. O corpo em equilíbrio é o alicerce de tudo.</p>
+            <ul class="esp-drawer-lista">
+              <li>Quiropraxia para dores crônicas e posturais</li>
+              <li>Reabilitação funcional pós-lesão</li>
+              <li>Análise biomecânica individualizada</li>
+              <li>Equilíbrio muscular e mobilidade</li>
+            </ul>
+            <div class="esp-drawer-galeria" data-placeholder="Imagens antes e depois em breve"></div>
+            <a href="https://wa.me/5563999999999" class="esp-drawer-cta">Agendar avaliação<span></span></a>
+          </div>
+        </div>
+      </li>
+
+      <li class="esp-item g-reveal" data-img="imagens%20instagram/aI/tricologia.png">
+        <div class="esp-item-header">
+          <div class="esp-item-left">
+            <span class="esp-num">05</span>
+            <span class="esp-nome">Tricologia</span>
+          </div>
+          <span class="esp-subs">Diagnóstico · Tratamento · Crescimento Capilar</span>
+          <span class="esp-toggle">+</span>
+        </div>
+        <div class="esp-drawer">
+          <div class="esp-drawer-inner">
+            <p class="esp-drawer-texto">A queda de cabelo afeta muito mais do que a aparência. Nosso protocolo de tricologia começa pelo diagnóstico correto da causa — e só então define o tratamento. Resultados que você vê no espelho e sente na autoestima.</p>
+            <ul class="esp-drawer-lista">
+              <li>Diagnóstico tricoscópico detalhado</li>
+              <li>Tratamento da alopecia e queda intensa</li>
+              <li>Protocolos de crescimento e fortalecimento capilar</li>
+              <li>Acompanhamento contínuo por etapas</li>
+            </ul>
+            <div class="esp-drawer-galeria" data-placeholder="Imagens antes e depois em breve"></div>
+            <a href="https://wa.me/5563999999999" class="esp-drawer-cta">Agendar avaliação<span></span></a>
+          </div>
+        </div>
+      </li>
+
+    </ul>
+  </section>
+
+  <!-- Imagem hover especialidades (desktop) -->
+  <div class="esp-hover-img" id="espHoverImg">
+    <img src="" alt="" id="espHoverImgEl" />
+  </div>
+
+  <!-- ─── EQUIPE ─── -->
+  <section id="equipe">
+    <div class="equipe-header g-reveal">
+      <h2>Quem cuida<br>de você</h2>
+      <p>Dois especialistas.<br>Uma filosofia.</p>
+    </div>
+    <div class="equipe-grid">
+
+      <div class="doutor-card g-reveal">
+        <div class="doutor-foto">
+          <img src="imagens%20instagram/aI/dra.%20lilian.png" alt="Dra. Lillian Lorenzi"
+            style="object-position: center 55%;" />
+        </div>
+        <div class="doutor-info">
+          <p class="doutor-cargo">Fundadora</p>
+          <h3 class="doutor-nome">Dra. Lillian Lorenzi</h3>
+          <p class="doutor-especialidade">Cirurgiã-Dentista · Harmonização Orofacial</p>
+          <p class="doutor-bio">A Dra. Lillian fundou o Instituto com uma convicção simples: o sorriso bonito não existe separado do rosto que o sustenta. Especialista em estética dental e harmonização orofacial, ela combina precisão técnica com um olhar refinado para proporções — porque resultado bom é aquele que as pessoas percebem sem saber o que mudou.</p>
+          <ul class="doutor-creds">
+            <li>Cirurgiã-Dentista com foco em odontologia estética</li>
+            <li>Especialista em Harmonização Orofacial</li>
+            <li>Mais de 12 anos em Palmas</li>
+            <li>Referência em lentes de contato dental e clareamento</li>
+          </ul>
+          <p class="doutor-frase">"A simetria do rosto como expressão de quem você realmente é."</p>
+        </div>
+      </div>
+
+      <div class="doutor-card g-reveal">
+        <div class="doutor-foto">
+          <img src="imagens%20instagram/aI/Dr.%20Heitor.png" alt="Dr. Heitor Dantas"
+            style="object-position: center 8%;" />
+        </div>
+        <div class="doutor-info">
+          <p class="doutor-cargo">Co-Fundador</p>
+          <h3 class="doutor-nome">Dr. Heitor Dantas</h3>
+          <p class="doutor-especialidade">Fisioterapeuta · Quiropraxia</p>
+          <p class="doutor-bio">O Dr. Heitor acredita que beleza e saúde não se separam. Como fisioterapeuta especializado em quiropraxia, ele trata o corpo de dentro pra fora — postura, mobilidade e dor crônica. Sua abordagem é direta: entender a causa real, não só o sintoma. Para muitos pacientes, a primeira sessão é o divisor de águas entre conviver com a dor e redescobrir o próprio corpo.</p>
+          <ul class="doutor-creds">
+            <li>Fisioterapeuta especialista em Quiropraxia</li>
+            <li>Tratamento de dor crônica e postura</li>
+            <li>Co-fundador do Instituto Lorenzi Dantas</li>
+            <li>Atendimento individualizado e sem protocolo genérico</li>
+          </ul>
+          <p class="doutor-frase">"Quando o corpo se move sem dor, tudo muda — a postura, a disposição, a autoestima."</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── DEPOIMENTOS ─── -->
+  <section id="depoimentos">
+    <div class="dep-eyebrow g-reveal">O que nossos pacientes dizem</div>
+    <div style="overflow:hidden;">
+      <div class="dep-track">
+        <!-- Bloco A -->
+        <div class="dep-card">
+          <p class="dep-texto">Nunca imaginei que cuidar dos dentes pudesse me fazer sentir mais bonita por inteiro. A Dra. Lillian tem uma sensibilidade rara — ela olha para o rosto, não só para o dente.</p>
+          <div class="dep-autor"><strong>Mariana C.</strong>Harmonização Orofacial</div>
+        </div>
+        <div class="dep-card">
+          <p class="dep-texto">Três anos com dor nas costas. Depois de quatro sessões com o Dr. Heitor, eu me lembrei do que era acordar sem dor. Parece exagero, mas não é.</p>
+          <div class="dep-autor"><strong>Rafael T.</strong>Quiropraxia</div>
+        </div>
+        <div class="dep-card">
+          <p class="dep-texto">O ambiente já te prepara para o cuidado antes de qualquer procedimento. Entrar no Instituto é como dar um pause no mundo lá fora.</p>
+          <div class="dep-autor"><strong>Camila S.</strong>Estética Avançada</div>
+        </div>
+        <div class="dep-card">
+          <p class="dep-texto">Fiz facetas e o resultado foi tão natural que as pessoas perceberam a diferença sem saber o que mudou. Isso é arte, não odontologia comum.</p>
+          <div class="dep-autor"><strong>Fernanda M.</strong>Odontologia Estética</div>
+        </div>
+        <div class="dep-card">
+          <p class="dep-texto">A tricologia salvou minha autoestima. Em seis meses de tratamento recuperei não só os fios, mas a confiança que eu achei que tinha perdido para sempre.</p>
+          <div class="dep-autor"><strong>Juliana P.</strong>Tricologia</div>
+        </div>
+        <!-- Bloco B (espelho para loop infinito) -->
+        <div class="dep-card">
+          <p class="dep-texto">Nunca imaginei que cuidar dos dentes pudesse me fazer sentir mais bonita por inteiro. A Dra. Lillian tem uma sensibilidade rara — ela olha para o rosto, não só para o dente.</p>
+          <div class="dep-autor"><strong>Mariana C.</strong>Harmonização Orofacial</div>
+        </div>
+        <div class="dep-card">
+          <p class="dep-texto">Três anos com dor nas costas. Depois de quatro sessões com o Dr. Heitor, eu me lembrei do que era acordar sem dor. Parece exagero, mas não é.</p>
+          <div class="dep-autor"><strong>Rafael T.</strong>Quiropraxia</div>
+        </div>
+        <div class="dep-card">
+          <p class="dep-texto">O ambiente já te prepara para o cuidado antes de qualquer procedimento. Entrar no Instituto é como dar um pause no mundo lá fora.</p>
+          <div class="dep-autor"><strong>Camila S.</strong>Estética Avançada</div>
+        </div>
+        <div class="dep-card">
+          <p class="dep-texto">Fiz facetas e o resultado foi tão natural que as pessoas perceberam a diferença sem saber o que mudou. Isso é arte, não odontologia comum.</p>
+          <div class="dep-autor"><strong>Fernanda M.</strong>Odontologia Estética</div>
+        </div>
+        <div class="dep-card">
+          <p class="dep-texto">A tricologia salvou minha autoestima. Em seis meses de tratamento recuperei não só os fios, mas a confiança que eu achei que tinha perdido para sempre.</p>
+          <div class="dep-autor"><strong>Juliana P.</strong>Tricologia</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── UNIDADES ─── -->
+  <section id="unidades">
+    <div class="unidade unidade-1">
+      <div class="unidade-bg"></div>
+      <div class="unidade-conteudo">
+        <div class="unidade-badge">Unidade 01 · Aureny III</div>
+        <h3 class="unidade-nome">Odontolli</h3>
+        <p class="unidade-bairro">Aureny III · Palmas — TO</p>
+        <ul class="unidade-servicos">
+          <li>Odontologia completa</li>
+          <li>Estética dental</li>
+          <li>Alinhadores invisíveis</li>
+          <li>Implantes e próteses</li>
+        </ul>
+        <a href="https://wa.me/5563999999999" class="unidade-cta">Agendar nesta unidade</a>
+      </div>
+    </div>
+
+    <div class="unidade unidade-2">
+      <div class="unidade-bg"></div>
+      <div class="unidade-conteudo">
+        <div class="unidade-badge">Unidade 02 · 305 Sul</div>
+        <h3 class="unidade-nome">Instituto<br>Lorenzi Dantas</h3>
+        <p class="unidade-bairro">305 Sul · Palmas — TO</p>
+        <ul class="unidade-servicos">
+          <li>Odontologia</li>
+          <li>Harmonização Orofacial</li>
+          <li>Estética Avançada</li>
+          <li>Fisioterapia & Quiropraxia</li>
+          <li>Tricologia</li>
+        </ul>
+        <a href="https://wa.me/5563999999999" class="unidade-cta">Agendar nesta unidade</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <p class="footer-frase g-reveal">
+      "Seu corpo é sua única verdadeira residência.<br>
+      <em>Cuide dele conosco.</em>"
+    </p>
+    <div class="footer-cta-wrap g-reveal">
+      <a href="https://wa.me/5563999999999" class="footer-wpp">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+        </svg>
+        Agendar pelo WhatsApp
+      </a>
+    </div>
+    <div class="footer-bottom">
+      <a href="#" class="footer-logo">Instituto Lorenzi Dantas</a>
+      <ul class="footer-links">
+        <li><a href="#especialidades">Especialidades</a></li>
+        <li><a href="#equipe">Equipe</a></li>
+        <li><a href="#unidades">Unidades</a></li>
+        <li><a href="https://wa.me/5563999999999">Contato</a></li>
+      </ul>
+      <p class="footer-copy">© 2025 Instituto Lorenzi Dantas</p>
+    </div>
+  </footer>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ── LENIS smooth scroll ──
+    const lenis = new Lenis({ duration: 1.6, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(time => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+
+    // ── PARTÍCULAS DOURADAS (canvas) ──
+    (function() {
+      const canvas = document.getElementById('particles-canvas');
+      const ctx = canvas.getContext('2d');
+      let W, H, particles = [];
+
+      function resize() {
+        W = canvas.width  = canvas.offsetWidth;
+        H = canvas.height = canvas.offsetHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function rand(min, max) { return Math.random() * (max - min) + min; }
+
+      function createParticle() {
+        return {
+          x: rand(0, W),
+          y: rand(H, H + 20),
+          r: rand(0.8, 2.2),
+          speed: rand(0.3, 0.9),
+          opacity: rand(0.15, 0.55),
+          drift: rand(-0.3, 0.3),
+          wobble: rand(0, Math.PI * 2),
+          wobbleSpeed: rand(0.008, 0.025),
+        };
+      }
+
+      for (let i = 0; i < 55; i++) {
+        const p = createParticle();
+        p.y = rand(0, H); // distribute on load
+        particles.push(p);
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        particles.forEach(p => {
+          p.wobble += p.wobbleSpeed;
+          p.x += Math.sin(p.wobble) * 0.4 + p.drift;
+          p.y -= p.speed;
+
+          if (p.y < -10) {
+            Object.assign(p, createParticle());
+          }
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(201,169,110,${p.opacity})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // ── CURSOR ──
+    const cursorDot  = document.getElementById('cursor-dot');
+    const cursorRing = document.getElementById('cursor-ring');
+    document.addEventListener('mousemove', e => {
+      // Ponto segue instantaneamente
+      gsap.to(cursorDot,  { x: e.clientX, y: e.clientY, duration: 0.08, ease: 'none' });
+      // Anel segue com leve atraso — efeito de flutuar
+      gsap.to(cursorRing, { x: e.clientX, y: e.clientY, duration: 0.45, ease: 'power2.out' });
+    });
+    document.querySelectorAll('a, button, .esp-item-header, .doutor-card').forEach(el => {
+      el.addEventListener('mouseenter', () => cursorRing.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursorRing.classList.remove('hover'));
+    });
+    document.querySelectorAll('#especialidades, footer, .unidade, #hero, #stats').forEach(el => {
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top center',
+        end: 'bottom center',
+        onEnter: ()     => cursorRing.classList.add('light'),
+        onLeave: ()     => cursorRing.classList.remove('light'),
+        onEnterBack: () => cursorRing.classList.add('light'),
+        onLeaveBack: () => cursorRing.classList.remove('light'),
+      });
+    });
+
+    // ── HERO ANIMATIONS ──
+    const heroTl = gsap.timeline({ delay: 0.3 });
+    heroTl
+      .to('.hero-eyebrow', { opacity: 1, y: 0, duration: 1,   ease: 'expo.out' })
+      .to('.hero-title',   { opacity: 1, y: 0, duration: 1.2, ease: 'expo.out' }, '-=0.6')
+      .to('.hero-sub',     { opacity: 1, y: 0, duration: 0.9, ease: 'expo.out' }, '-=0.5')
+      .to('.hero-btn',     { opacity: 1, y: 0, duration: 0.8, ease: 'expo.out' }, '-=0.5')
+      .to('.hero-scroll',  { opacity: 1, duration: 0.8 }, '-=0.2')
+      .to('#wpp-float',    { opacity: 1, duration: 0.6 }, '-=0.2');
+
+    // ── FILOSOFIA HORIZONTAL SCROLL ──
+    // Só ativa em desktop
+    if (window.innerWidth > 900) {
+      const panels = gsap.utils.toArray('.filosofia-panel');
+      gsap.to(panels, {
+        xPercent: -100 * (panels.length - 1),
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#filosofia-wrap',
+          pin: true,
+          scrub: 1,
+          snap: 1 / (panels.length - 1),
+          end: () => '+=' + (document.querySelector('#filosofia').offsetWidth),
+        }
+      });
+    }
+
+    // ── PARALLAX UNIDADES ──
+    document.querySelectorAll('.unidade-bg').forEach(bg => {
+      gsap.to(bg, {
+        yPercent: 18,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: bg.closest('.unidade'),
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true,
+        }
+      });
+    });
+
+    // ── NÚMEROS ANIMADOS ──
+    document.querySelectorAll('.stat-item').forEach(item => {
+      const counter = item.querySelector('.count');
+      const target  = parseInt(item.querySelector('.stat-num').dataset.target);
+      ScrollTrigger.create({
+        trigger: item,
+        start: 'top 85%',
+        once: true,
+        onEnter: () => {
+          gsap.to({ val: 0 }, {
+            val: target,
+            duration: 1.8,
+            ease: 'power2.out',
+            onUpdate: function() {
+              counter.textContent = Math.round(this.targets()[0].val);
+            }
+          });
+        }
+      });
+    });
+
+    // ── ESPECIALIDADES HOVER IMG ──
+    const hoverImg   = document.getElementById('espHoverImg');
+    const hoverImgEl = document.getElementById('espHoverImgEl');
+
+    document.querySelectorAll('.esp-item').forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        hoverImgEl.src = item.getAttribute('data-img');
+        hoverImg.classList.add('visible');
+        gsap.to(hoverImg, { opacity: 1, duration: 0.3 });
+      });
+      item.addEventListener('mouseleave', () => {
+        hoverImg.classList.remove('visible');
+        gsap.to(hoverImg, { opacity: 0, duration: 0.2 });
+      });
+    });
+    document.addEventListener('mousemove', e => {
+      gsap.to(hoverImg, { x: e.clientX, y: e.clientY, duration: 0.5, ease: 'power2.out' });
+    });
+
+    // ── GSAP REVEAL ──
+    gsap.utils.toArray('.g-reveal').forEach((el, i) => {
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: 'expo.out',
+        scrollTrigger: { trigger: el, start: 'top 85%' },
+        delay: (i % 4) * 0.1
+      });
+    });
+
+    // ── ACCORDION (desktop + mobile) ──
+    document.querySelectorAll('.esp-item-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const item = header.closest('.esp-item');
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.esp-item').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+
+    // ── ESP ITEMS REVEAL ──
+    gsap.utils.toArray('.esp-item').forEach((el, i) => {
+      gsap.from(el, {
+        opacity: 0, x: -30,
+        duration: 0.8,
+        ease: 'expo.out',
+        scrollTrigger: { trigger: el, start: 'top 88%' },
+        delay: i * 0.1
+      });
+    });
+  </script>
+</body>
+</html>
