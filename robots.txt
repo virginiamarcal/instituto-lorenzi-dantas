@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /proposta.html
+
+Sitemap: https://www.institutolorenzidantas.com.br/sitemap.xml
