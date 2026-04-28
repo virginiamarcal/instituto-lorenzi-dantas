@@ -1743,56 +1743,109 @@
   </section>
 
   <!-- ─── FAQ ─── -->
-  <section id="faq" style="background:var(--alabaster); padding:120px 60px; border-top:1px solid rgba(26,24,22,0.07);">
-    <div style="max-width:760px; margin:0 auto;">
+  <section id="faq" style="background:var(--alabaster);padding:120px 60px;border-top:1px solid rgba(26,24,22,0.07);">
+    <style>
+      .faq-item { border-bottom:1px solid rgba(26,24,22,0.08); }
+      .faq-header {
+        display:flex; justify-content:space-between; align-items:center;
+        padding:28px 0; cursor:pointer; gap:24px;
+        transition: padding-left 0.3s;
+      }
+      .faq-header:hover { padding-left:8px; }
+      .faq-pergunta {
+        font-family:'Playfair Display',serif; font-size:1.1rem;
+        font-weight:400; color:var(--obsidian); line-height:1.4;
+      }
+      .faq-item.open .faq-pergunta { color:var(--gold); }
+      .faq-toggle {
+        width:30px; height:30px; border:1px solid rgba(26,24,22,0.15);
+        border-radius:50%; display:flex; align-items:center; justify-content:center;
+        flex-shrink:0; color:var(--gold); font-size:1.2rem; font-weight:300;
+        transition:transform 0.4s ease, border-color 0.3s, background 0.3s;
+      }
+      .faq-item.open .faq-toggle {
+        transform:rotate(45deg); border-color:var(--gold);
+        background:rgba(201,169,110,0.08);
+      }
+      .faq-resposta {
+        overflow:hidden; max-height:0;
+        transition:max-height 0.5s cubic-bezier(0.4,0,0.2,1);
+      }
+      .faq-item.open .faq-resposta { max-height:300px; }
+      .faq-resposta-inner {
+        padding:0 40px 28px 0;
+        font-size:0.9rem; color:rgba(26,24,22,0.68); line-height:2;
+      }
+    </style>
+
+    <div style="max-width:760px;margin:0 auto;">
       <p style="font-size:0.62rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);margin-bottom:24px;display:flex;align-items:center;gap:14px;">
         <span style="width:28px;height:1px;background:var(--gold);display:inline-block;"></span>
         Perguntas frequentes
       </p>
-      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(2rem,3.5vw,3.2rem);font-weight:300;font-style:italic;color:var(--obsidian);line-height:1.15;margin-bottom:64px;">
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(2rem,3.5vw,3.2rem);font-weight:300;font-style:italic;color:var(--obsidian);line-height:1.15;margin-bottom:56px;">
         Tudo que você<br>precisa saber
       </h2>
+
       <div itemscope itemtype="https://schema.org/FAQPage">
 
-        <div style="border-bottom:1px solid rgba(26,24,22,0.08);padding:32px 0;" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-          <h3 itemprop="name" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:400;color:var(--obsidian);margin-bottom:14px;">Onde fica o Instituto Lorenzi Dantas em Palmas?</h3>
-          <div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
-            <p itemprop="text" style="font-size:0.9rem;color:rgba(26,24,22,0.68);line-height:2;">Temos duas unidades em Palmas TO. A <strong>Unidade 305 Sul</strong> fica na ACSV SO 32, Av. LO 5, nº 21, Plano Diretor Sul — onde funcionam todas as especialidades. A <strong>Unidade Aureny III</strong> (Odontolli) fica na Av. I, Quadra 120, Lote 16, Sala 01, Jardim Aureny III, com foco em odontologia.</p>
+        <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <div class="faq-header">
+            <h3 class="faq-pergunta" itemprop="name">Onde fica o Instituto Lorenzi Dantas em Palmas?</h3>
+            <span class="faq-toggle">+</span>
+          </div>
+          <div class="faq-resposta" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+            <p class="faq-resposta-inner" itemprop="text">Temos duas unidades em Palmas TO. A <strong>Unidade 305 Sul</strong> fica na ACSV SO 32, Av. LO 5, nº 21, Plano Diretor Sul — onde funcionam todas as especialidades. A <strong>Unidade Aureny III</strong> (Odontolli) fica na Av. I, Quadra 120, Lote 16, Sala 01, Jardim Aureny III, com foco em odontologia.</p>
           </div>
         </div>
 
-        <div style="border-bottom:1px solid rgba(26,24,22,0.08);padding:32px 0;" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-          <h3 itemprop="name" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:400;color:var(--obsidian);margin-bottom:14px;">Quais serviços o Instituto oferece?</h3>
-          <div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
-            <p itemprop="text" style="font-size:0.9rem;color:rgba(26,24,22,0.68);line-height:2;">Oferecemos odontologia estética (clareamento, facetas, implantes, alinhadores), harmonização orofacial (botox, preenchimento, fios PDO, Ultraformer), estética avançada (microagulhamento, radiofrequência, drenagem), fisioterapia, quiropraxia e tricologia.</p>
+        <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <div class="faq-header">
+            <h3 class="faq-pergunta" itemprop="name">Quais serviços o Instituto oferece?</h3>
+            <span class="faq-toggle">+</span>
+          </div>
+          <div class="faq-resposta" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+            <p class="faq-resposta-inner" itemprop="text">Oferecemos odontologia estética (clareamento, facetas, implantes, alinhadores), harmonização orofacial (botox, preenchimento, fios PDO, Ultraformer), estética avançada (microagulhamento, radiofrequência, drenagem), fisioterapia, quiropraxia e tricologia.</p>
           </div>
         </div>
 
-        <div style="border-bottom:1px solid rgba(26,24,22,0.08);padding:32px 0;" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-          <h3 itemprop="name" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:400;color:var(--obsidian);margin-bottom:14px;">O Instituto faz harmonização facial em Palmas?</h3>
-          <div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
-            <p itemprop="text" style="font-size:0.9rem;color:rgba(26,24,22,0.68);line-height:2;">Sim. A Dra. Lillian Lorenzi realiza harmonização orofacial completa: botox, preenchimento labial e malar, fios PDO e Ultraformer. O foco é resultado natural — equilibrar as proporções do rosto sem exageros.</p>
+        <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <div class="faq-header">
+            <h3 class="faq-pergunta" itemprop="name">O Instituto faz harmonização facial em Palmas?</h3>
+            <span class="faq-toggle">+</span>
+          </div>
+          <div class="faq-resposta" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+            <p class="faq-resposta-inner" itemprop="text">Sim. A Dra. Lillian Lorenzi realiza harmonização orofacial completa: botox, preenchimento labial e malar, fios PDO e Ultraformer. O foco é resultado natural — equilibrar as proporções do rosto sem exageros.</p>
           </div>
         </div>
 
-        <div style="border-bottom:1px solid rgba(26,24,22,0.08);padding:32px 0;" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-          <h3 itemprop="name" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:400;color:var(--obsidian);margin-bottom:14px;">Como agendar uma consulta?</h3>
-          <div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
-            <p itemprop="text" style="font-size:0.9rem;color:rgba(26,24,22,0.68);line-height:2;">O agendamento é feito pelo WhatsApp — é a forma mais rápida. Clique no botão flutuante nesta página ou acesse o link na bio do nosso Instagram @institutolorenzidantas.</p>
+        <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <div class="faq-header">
+            <h3 class="faq-pergunta" itemprop="name">Como agendar uma consulta?</h3>
+            <span class="faq-toggle">+</span>
+          </div>
+          <div class="faq-resposta" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+            <p class="faq-resposta-inner" itemprop="text">O agendamento é feito pelo WhatsApp — é a forma mais rápida. Clique no botão flutuante nesta página ou acesse o link na bio do nosso Instagram @institutolorenzidantas.</p>
           </div>
         </div>
 
-        <div style="border-bottom:1px solid rgba(26,24,22,0.08);padding:32px 0;" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-          <h3 itemprop="name" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:400;color:var(--obsidian);margin-bottom:14px;">O Instituto atende fisioterapia e quiropraxia em Palmas?</h3>
-          <div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
-            <p itemprop="text" style="font-size:0.9rem;color:rgba(26,24,22,0.68);line-height:2;">Sim. O Dr. Heitor Dantas é fisioterapeuta especialista em quiropraxia e atende na unidade 305 Sul. Trata dores crônicas, problemas posturais, reabilitação funcional e limitações de mobilidade.</p>
+        <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <div class="faq-header">
+            <h3 class="faq-pergunta" itemprop="name">O Instituto atende fisioterapia e quiropraxia em Palmas?</h3>
+            <span class="faq-toggle">+</span>
+          </div>
+          <div class="faq-resposta" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+            <p class="faq-resposta-inner" itemprop="text">Sim. O Dr. Heitor Dantas é fisioterapeuta especialista em quiropraxia e atende na unidade 305 Sul. Trata dores crônicas, problemas posturais, reabilitação funcional e limitações de mobilidade.</p>
           </div>
         </div>
 
-        <div style="padding:32px 0;" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-          <h3 itemprop="name" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:400;color:var(--obsidian);margin-bottom:14px;">O Instituto trata queda de cabelo em Palmas?</h3>
-          <div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
-            <p itemprop="text" style="font-size:0.9rem;color:rgba(26,24,22,0.68);line-height:2;">Sim. Nosso protocolo de tricologia começa com diagnóstico tricoscópico detalhado para identificar a causa da queda. O tratamento é individualizado e acompanhado em etapas — para alopecia, queda intensa e fortalecimento capilar.</p>
+        <div class="faq-item" style="border-bottom:none;" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <div class="faq-header">
+            <h3 class="faq-pergunta" itemprop="name">O Instituto trata queda de cabelo em Palmas?</h3>
+            <span class="faq-toggle">+</span>
+          </div>
+          <div class="faq-resposta" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+            <p class="faq-resposta-inner" itemprop="text">Sim. Nosso protocolo de tricologia começa com diagnóstico tricoscópico detalhado para identificar a causa da queda. O tratamento é individualizado e acompanhado em etapas — para alopecia, queda intensa e fortalecimento capilar.</p>
           </div>
         </div>
 
@@ -2014,6 +2067,16 @@
         const item = header.closest('.esp-item');
         const isOpen = item.classList.contains('open');
         document.querySelectorAll('.esp-item').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+
+    // ── FAQ ACCORDION ──
+    document.querySelectorAll('.faq-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const item = header.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
         if (!isOpen) item.classList.add('open');
       });
     });
